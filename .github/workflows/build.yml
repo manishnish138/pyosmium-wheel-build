@@ -87,6 +87,9 @@ jobs:
           python -m pip install osmium --no-index --find-links file:///$(pwd)/wheelhouse/
           (cd pyosmium/test && rm -rf ../build && python -m nose)
 
+      - name: check wheel
+        run: |
+          ls ./wheelhouse/
       - uses: actions/upload-artifact@v2
         with:
           path: ./wheelhouse/*.whl
