@@ -103,6 +103,10 @@ jobs:
             python3 -m pip install virtualenv && python3 -m venv .env && \
             source .env/bin/activate && \
             python --version && \
+            ls ./wheelhouse/ && \
+            python -m pip install nose mock shapely && \
+            python -m pip install osmium --no-index --find-links file:///$(pwd)/wheelhouse/ && \
+            cd pyosmium/test && rm -rf ../build && python -m nose && \
             deactivate'
 
       - name: check wheel
