@@ -10,6 +10,10 @@ jobs:
       matrix:
         # os: [ubuntu-18.04, windows-latest, macos-latest] # skip windows 
         os: [ubuntu-20.04, macos-10.15]
+        arch: [auto, aarch64]
+        exclude:
+          - os: macos-10.15
+            arch: aarch64
 
     steps:
       - uses: actions/checkout@v2
@@ -44,6 +48,7 @@ jobs:
           python-version: 3.6
 
       - name: Test wheel 3.6
+        if: ${{ matrix.arch != 'aarch64' }}
         run: |
           python --version
           python -m pip install nose mock shapely
@@ -56,6 +61,7 @@ jobs:
           python-version: 3.7
 
       - name: Test wheel 3.7
+        if: ${{ matrix.arch != 'aarch64' }}
         run: |
           python --version
           python -m pip install nose mock shapely
@@ -68,6 +74,7 @@ jobs:
           python-version: 3.8
 
       - name: Test wheel 3.8
+        if: ${{ matrix.arch != 'aarch64' }}
         run: |
           python --version
           python -m pip install nose mock shapely
@@ -80,12 +87,22 @@ jobs:
           python-version: 3.9
 
       - name: Test wheel 3.9
-        if: matrix.os != 'macos-10.15' # disabled because https://github.com/actions/virtual-environments/issues/2322
+        if: matrix.os != 'macos-10.15' && matrix.arch != 'aarch64' # disabled because https://github.com/actions/virtual-environments/issues/2322
         run: |
           python --version
           python -m pip install nose mock shapely
           python -m pip install osmium --no-index --find-links file:///$(pwd)/wheelhouse/
           (cd pyosmium/test && rm -rf ../build && python -m nose)
+
+      - name: Test wheel 3.8
+        if: ${{ matrix.arch == 'aarch64' }}
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+            ubuntu:20.04 \
+            bash -exc 'python -m pip install virtualenv && python -m venv .env && \
+            source .env/bin/activate && \
+            python --version && \
+            deactivate'
 
       - name: check wheel
         run: |
