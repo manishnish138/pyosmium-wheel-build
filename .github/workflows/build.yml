@@ -99,7 +99,7 @@ jobs:
         run: |
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
             ubuntu:20.04 \
-            bash -exc 'python -m pip install virtualenv && python -m venv .env && \
+            bash -exc 'python3 -m pip install virtualenv && python3 -m venv .env && \
             source .env/bin/activate && \
             python --version && \
             deactivate'
