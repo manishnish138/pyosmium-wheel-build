@@ -109,6 +109,7 @@ jobs:
             source .env/bin/activate && \
             python --version && \
             ls ./wheelhouse/ && \
+            uname -m && \
             python -m pip install nose mock shapely && \
             python -m pip install osmium --no-index --find-links file:///$(pwd)/wheelhouse/osmium-3.1.3-cp38-cp38-manylinux2014_aarch64.whl && \
             cd pyosmium/test && rm -rf ../build && python -m nose && \
