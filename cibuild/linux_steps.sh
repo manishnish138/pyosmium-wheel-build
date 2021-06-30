@@ -52,8 +52,11 @@ ln -sf $(pwd)/libosmium pyosmium/contrib/libosmium
 ln -sf $(pwd)/protozero pyosmium/contrib/protozero
 
 
-yum install -y sparsehash-devel expat-devel boost-devel zlib-devel
-
+if [ "$(uname -m)" == "aarch64" ]; then
+    yum install -y expat-devel boost-devel zlib-devel
+else
+    yum install -y sparsehash-devel expat-devel boost-devel zlib-devel
+fi
 
 # install bzip2
 build_new_zlib
