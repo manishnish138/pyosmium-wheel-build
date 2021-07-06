@@ -116,10 +116,28 @@ jobs:
             cd pyosmium/test && rm -rf ../build && python -m nose && \
             deactivate'
 
+      - name: Test wheel 3.7
+        if: ${{ matrix.arch == 'aarch64' }}
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+            arm64v8/ubuntu:20.04 \
+            bash -exc 'apt-get update && apt-get -y install python3 python3-pip python3-venv && \
+            python3 -m pip install virtualenv && python3 -m venv .env && \
+            source .env/bin/activate && \
+            python --version && \
+            ls ./wheelhouse/ && \
+            uname -m && \
+            apt-get -y update && apt-get -y install libgeos-dev sudo && \
+            sudo add-apt-repository ppa:deadsnakes/ppa && \
+            sudo apt-get update && \
+            sudo apt-get install python3.7 && \
+            python -m pip install nose mock shapely && \
+            python -m pip install osmium --no-index --find-links file:///$(pwd)/wheelhouse/ && \
+            cd pyosmium/test && rm -rf ../build && python -m nose && \
+            deactivate'
       - name: check wheel
         run: |
           ls ./wheelhouse/
       - uses: actions/upload-artifact@v2
         with:
           path: ./wheelhouse/*.whl
-
