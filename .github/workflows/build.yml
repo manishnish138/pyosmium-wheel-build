@@ -121,7 +121,7 @@ jobs:
         run: |
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
             arm64v8/ubuntu:20.04 \
-            bash -exc 'apt-get -y update && apt-get -y install libgeos-dev software-properties-common && \
+            bash -exc 'apt-get -y update && apt-get -y install sudo libgeos-dev software-properties-common && \
             sudo add-apt-repository ppa:deadsnakes/ppa && \
             sudo apt-get update && \
             sudo apt-get install python3.7 && \
