@@ -62,7 +62,7 @@ jobs:
           (cd pyosmium/test && rm -rf ../build && python -m nose)
 
       - name: Set up Python 3.7
-        if: ${{ matrix.arch =!= 'aarch64' }}
+        if: ${{ matrix.arch != 'aarch64' }}
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
