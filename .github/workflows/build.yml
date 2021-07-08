@@ -48,7 +48,7 @@ jobs:
           python -m cibuildwheel --output-dir wheelhouse pyosmium
 
       - name: Set up Python 3.6
-        if: ${{ matrix.arch == 'aarch64' }}
+        if: ${{ matrix.arch != 'aarch64' }}
         uses: actions/setup-python@v2
         with:
           python-version: 3.6
@@ -62,7 +62,7 @@ jobs:
           (cd pyosmium/test && rm -rf ../build && python -m nose)
 
       - name: Set up Python 3.7
-        if: ${{ matrix.arch == 'aarch64' }}
+        if: ${{ matrix.arch =!= 'aarch64' }}
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
@@ -76,7 +76,7 @@ jobs:
           (cd pyosmium/test && rm -rf ../build && python -m nose)
 
       - name: Set up Python 3.8
-        if: ${{ matrix.arch == 'aarch64' }}
+        if: ${{ matrix.arch != 'aarch64' }}
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
@@ -90,7 +90,7 @@ jobs:
           (cd pyosmium/test && rm -rf ../build && python -m nose)
 
       - name: Set up Python 3.9
-        if: ${{ matrix.arch == 'aarch64' }}
+        if: ${{ matrix.arch != 'aarch64' }}
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
@@ -141,7 +141,27 @@ jobs:
             cd pyosmium/test && rm -rf ../build && python -m nose && \
             deactivate'
       
-      - name: Test wheel 3.7
+      - name: Test wheel 3.9
+        if: ${{ matrix.arch == 'aarch64' }}
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
+            arm64v8/ubuntu:20.04 \
+            bash -exc 'apt-get -y update && apt-get -y install sudo libgeos-dev software-properties-common && \
+            sudo add-apt-repository ppa:deadsnakes/ppa && \
+            sudo apt-get update && \
+            sudo apt-get install -y python3.9 && \
+            python3.9 --version && \
+            apt-get -y install python3-pip python3.9-venv && \
+            python3.9 -m pip install virtualenv && python3.9 -m venv py36-venv && \
+            source py39-venv/bin/activate && \
+            python --version && \
+            ls ./wheelhouse/ && \
+            uname -m && \
+            python -m pip install nose mock shapely && \
+            python -m pip install osmium --no-index --find-links file:///$(pwd)/wheelhouse/ && \
+            cd pyosmium/test && rm -rf ../build && python -m nose && \
+            deactivate'
+      - name: Test wheel 3.6
         if: ${{ matrix.arch == 'aarch64' }}
         run: |
           docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws \
