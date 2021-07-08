@@ -126,7 +126,7 @@ jobs:
             sudo apt-get update && \
             sudo apt-get install -y python3.7 && \
             python3.7 --version && \
-            apt-get update && apt-get -y install python3-pip python3-venv && \
+            apt-get update && apt-get -y install python3-pip python3.7-venv && \
             python3.7 -m pip install virtualenv && python3.7 -m venv .env && \
             source .env/bin/activate && \
             python --version && \
